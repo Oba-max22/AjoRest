@@ -12,11 +12,11 @@ import com.obamax.ajo.repositories.RoleRepository;
 import com.obamax.ajo.security.jwt.JwtUtils;
 import com.obamax.ajo.security.service.UserDetailsServiceImpl;
 import com.obamax.ajo.services.MemberService;
-import com.obamax.ajo.services.UserService;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -66,7 +66,7 @@ public class AuthController {
     }
 
     @PostMapping("/admin/login")
-    @ApiOperation(value = "Logs in an Admin")
+    @ApiOperation(value = "Admin Login")
     public ResponseEntity<?> doLogin(@Valid @RequestBody LoginRequest request){
         Authentication authentication = authenticationManager
                 .authenticate(
