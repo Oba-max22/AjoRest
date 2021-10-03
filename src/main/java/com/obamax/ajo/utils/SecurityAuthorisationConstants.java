@@ -4,7 +4,11 @@ public class SecurityAuthorisationConstants {
 
     public static final String[] PUBLIC_URIS = new String[]{
             "/",
+            "/admin/**",
             "/admin/login",
+            "/admin/create-member",
+            "/member/**",
+            "/member/login",
 
             // -- Swagger UI v3 (OpenAPI) Start
             "/v2/api-docs",
@@ -19,13 +23,6 @@ public class SecurityAuthorisationConstants {
             "/swagger-ui/login/",
             "/swagger-ui/api/login/",
             "/swagger-ui/#/**",
-            // -- Swagger UI v3 (OpenAPI) End
-            "/login",
-            "/api/login",
-            "api/login/",
-            "/#/api/login/",
-            "/register",
-            "/api/register"
             // -- Swagger UI v3 (OpenAPI) End
     };
 }
