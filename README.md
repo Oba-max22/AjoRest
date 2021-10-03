@@ -6,21 +6,21 @@ Build a simple contributory thrift saving (ajo) application platform where a gro
 
 ## For the application you should provide the followings:
 
-User stories
-Domain Object Modelling and ERD (Database Schema Design)
-Component architecture
+- User stories
+- Domain Object Modelling and ERD (Database Schema Design)
+- Component architecture
  
 
 ## Technologies & coding principles
 
-Spring boot
-Hibernate JPA
-Any RDBMS of your choice
-Caching (nice to have) preferably-Ehcache
-TDD(Test driven development) preferably
-Git
-CI/CD 
-OOP
-Clean code design principles -SLAP,DRY,KISS,SOLID
-Clean code architecture- MVC, e.t.c
-Design patterns (optional)
+- Spring boot
+- Hibernate JPA
+- Any RDBMS of your choice
+- Caching (nice to have) preferably-Ehcache
+- TDD(Test driven development) preferably
+- Git
+- CI/CD 
+- OOP
+- Clean code design principles -SLAP,DRY,KISS,SOLID
+- Clean code architecture- MVC, e.t.c
+- Design patterns (optional)
