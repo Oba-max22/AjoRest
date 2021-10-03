@@ -1,7 +1,9 @@
 package com.obamax.ajo.services.implementation;
 
 import com.obamax.ajo.exceptions.BadRequestException;
+import com.obamax.ajo.exceptions.ResourceNotFoundException;
 import com.obamax.ajo.models.Member;
+import com.obamax.ajo.models.User;
 import com.obamax.ajo.payload.request.RegisterMemberRequest;
 import com.obamax.ajo.repositories.MemberRepository;
 import com.obamax.ajo.services.MemberService;
@@ -10,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,5 +77,14 @@ public class MemberServiceImplementation implements MemberService {
     @Override
     public Member saveMember(Member member) {
         return memberRepository.save(member);
+    }
+
+    @Override
+    public Member findMemberByEmail(String email) {
+        Optional<Member> member = memberRepository.findByEmailAddress(email);
+        if (member.isEmpty()) {
+            throw new ResourceNotFoundException("Incorrect parameter :: email " + email + " does not exist");
+        }
+        return member.get();
     }
 }

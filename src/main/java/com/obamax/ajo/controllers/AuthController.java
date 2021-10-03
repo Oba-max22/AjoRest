@@ -52,6 +52,7 @@ public class AuthController {
         this.roleRepository = roleRepository;
     }
 
+    @PreAuthorize("hasAuthority('Admin')")
     @PostMapping("/admin/create-member")
     @ApiOperation(value = "Create a new member")
     public MemberResponse register(@Valid @RequestBody RegisterMemberRequest registerMember) {
@@ -65,8 +66,8 @@ public class AuthController {
         return MemberResponse.build(savedMember);
     }
 
-    @PostMapping("/admin/login")
-    @ApiOperation(value = "Admin Login")
+    @PostMapping("/login")
+    @ApiOperation(value = "Admin and Member Login")
     public ResponseEntity<?> doLogin(@Valid @RequestBody LoginRequest request){
         Authentication authentication = authenticationManager
                 .authenticate(

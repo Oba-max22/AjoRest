@@ -1,6 +1,7 @@
 package com.obamax.ajo.security.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.obamax.ajo.models.Member;
 import com.obamax.ajo.models.User;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -71,6 +72,18 @@ public class UserDetailsImpl implements UserDetails {
         return new UserDetailsImpl(
                 user.getEmailAddress(),
                 user.getPassword(),
+                authorities);
+
+    }
+
+    public static UserDetailsImpl build(Member member){
+        List<GrantedAuthority> authorities = member.getRoles().stream()
+                .map(role -> new SimpleGrantedAuthority(role.getType().name()))
+                .collect(Collectors.toList());
+
+        return new UserDetailsImpl(
+                member.getEmailAddress(),
+                member.getPassword(),
                 authorities);
 
     }

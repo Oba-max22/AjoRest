@@ -1,6 +1,5 @@
 package com.obamax.ajo.services.implementation;
 
-import com.obamax.ajo.exceptions.ResourceNotFoundException;
 import com.obamax.ajo.models.User;
 import com.obamax.ajo.repositories.UserRepository;
 import com.obamax.ajo.services.UserService;
@@ -16,12 +15,8 @@ public class UserServiceImplementation implements UserService {
     UserRepository userRepository;
 
     @Override
-    public User findUserByEmail(String email) {
+    public Optional<User> findUserByEmail(String email) {
         Optional<User> user = userRepository.findByEmailAddress(email);
-        if (user.isEmpty()) {
-            throw new ResourceNotFoundException("Incorrect parameter; email " + email + " does not exist");
-        }
-        return user.get();
+        return user;
     }
-
 }

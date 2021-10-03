@@ -5,10 +5,9 @@ public class SecurityAuthorisationConstants {
     public static final String[] PUBLIC_URIS = new String[]{
             "/",
             "/admin/**",
-            "/admin/login",
+            "/login",
             "/admin/create-member",
             "/member/**",
-            "/member/login",
 
             // -- Swagger UI v3 (OpenAPI) Start
             "/v2/api-docs",
