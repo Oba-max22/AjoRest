@@ -1,5 +1,6 @@
 package com.obamax.ajo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +24,11 @@ public class Member extends BaseUser {
     @Column(name = "date_joined", nullable = false)
     private String dateJoined;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Contribution> contributions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Request> requests;
 
