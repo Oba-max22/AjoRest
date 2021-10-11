@@ -39,8 +39,6 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final UserDetailsServiceImpl userDetailService;
     private final JwtUtils jwtUtils;
-    private final MemberService memberService;
-    private final RoleRepository roleRepository;
 
     public AuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailService,
                           JwtUtils jwtUtils, MemberService memberService,
@@ -48,22 +46,6 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
         this.userDetailService = userDetailService;
         this.jwtUtils = jwtUtils;
-        this.memberService = memberService;
-        this.roleRepository = roleRepository;
-    }
-
-    @PreAuthorize("hasAuthority('Admin')")
-    @PostMapping("/admin/create-member")
-    @ApiOperation(value = "Create a new member")
-    public MemberResponse register(@Valid @RequestBody RegisterMemberRequest registerMember) {
-        Member member = memberService.registration(registerMember);
-        List<Role> roles = new ArrayList<>();
-        Role memberRole = roleRepository.findRoleByType(RoleType.MEMBER)
-                .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
-        roles.add(memberRole);
-        member.setRoles(roles);
-        Member savedMember = memberService.saveMember(member);
-        return MemberResponse.build(savedMember);
     }
 
     @PostMapping("/login")
