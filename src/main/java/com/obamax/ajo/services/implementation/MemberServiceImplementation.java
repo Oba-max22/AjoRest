@@ -4,6 +4,7 @@ import com.obamax.ajo.exceptions.BadRequestException;
 import com.obamax.ajo.exceptions.ResourceNotFoundException;
 import com.obamax.ajo.models.Member;
 import com.obamax.ajo.models.User;
+import com.obamax.ajo.payload.request.MemberEditRequest;
 import com.obamax.ajo.payload.request.RegisterMemberRequest;
 import com.obamax.ajo.repositories.MemberRepository;
 import com.obamax.ajo.services.MemberService;
@@ -12,13 +13,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
 public class MemberServiceImplementation implements MemberService {
-
     @Autowired
     private MemberRepository memberRepository;
 
@@ -86,5 +87,26 @@ public class MemberServiceImplementation implements MemberService {
             throw new ResourceNotFoundException("Incorrect parameter :: email " + email + " does not exist");
         }
         return member.get();
+    }
+
+    @Override
+    public Member editMember(Long memberId, MemberEditRequest memberRequest) {
+        Optional<Member> member = memberRepository.findById(memberId);
+
+        if (member.isPresent()) {
+            member.get().setLastName(memberRequest.getLastName());
+            member.get().setFirstName(memberRequest.getFirstName());
+            member.get().setEmailAddress(memberRequest.getEmailAddress());
+            member.get().setPhoneNumber(memberRequest.getPhoneNumber());
+            saveMember(member.get());
+            return member.get();
+        } else {
+            throw new ResourceNotFoundException("Member not found! Check id and try again." );
+        }
+    }
+
+    @Override
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
     }
 }
