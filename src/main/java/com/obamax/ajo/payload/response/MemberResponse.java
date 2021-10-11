@@ -10,6 +10,8 @@ public class MemberResponse {
 
     private String message;
 
+    private long Id;
+
     private String lastName;
 
     private String firstName;
@@ -23,6 +25,7 @@ public class MemberResponse {
     public static MemberResponse build(Member member){
         return new MemberResponse (
                 "Registration Successful",
+                member.getId(),
                 member.getLastName(),
                 member.getFirstName(),
                 member.getEmailAddress(),
