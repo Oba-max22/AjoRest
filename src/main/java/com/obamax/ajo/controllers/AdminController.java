@@ -1,6 +1,8 @@
 package com.obamax.ajo.controllers;
 
+import com.obamax.ajo.dto.ContributionCycleDTO;
 import com.obamax.ajo.exceptions.ResourceNotFoundException;
+import com.obamax.ajo.models.ContributionCycle;
 import com.obamax.ajo.models.Member;
 import com.obamax.ajo.models.Role;
 import com.obamax.ajo.models.RoleType;
@@ -8,8 +10,10 @@ import com.obamax.ajo.payload.request.MemberEditRequest;
 import com.obamax.ajo.payload.request.RegisterMemberRequest;
 import com.obamax.ajo.payload.response.MemberResponse;
 import com.obamax.ajo.repositories.RoleRepository;
+import com.obamax.ajo.services.ContributionCycleService;
 import com.obamax.ajo.services.MemberService;
 import io.swagger.annotations.ApiOperation;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,12 +26,18 @@ import java.util.List;
 @RestController
 public class AdminController {
 
+    private final ContributionCycleService contributionCycleService;
     private final MemberService memberService;
     private final RoleRepository roleRepository;
+    private final ModelMapper modelMapper;
 
-    public AdminController(MemberService memberService, RoleRepository roleRepository) {
+    public AdminController(ContributionCycleService contributionCycleService,
+                           MemberService memberService,
+                           RoleRepository roleRepository, ModelMapper modelMapper) {
+        this.contributionCycleService = contributionCycleService;
         this.memberService = memberService;
         this.roleRepository = roleRepository;
+        this.modelMapper = modelMapper;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -60,8 +70,15 @@ public class AdminController {
         return new ResponseEntity<>(memberList, HttpStatus.OK);
     }
 
-    // TODO - Endpoint for Admin to create a new contribution cycle.
-
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/admin/create-cycle")
+    @ApiOperation(value = "Create a new contribution cycle")
+    public ResponseEntity<ContributionCycleDTO> createContributionCycle(@Valid @RequestBody
+                                                                        ContributionCycleDTO contributionCycleRequest) {
+        ContributionCycle contributionCycle = contributionCycleService.createCycle(contributionCycleRequest);
+        ContributionCycleDTO contributionCycleResponse = modelMapper.map(contributionCycle, ContributionCycleDTO.class);
+        return new ResponseEntity<>(contributionCycleResponse, HttpStatus.OK);
+    }
 
 
     // TODO - Endpoint for Admin to edit details of contribution cycle.
