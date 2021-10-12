@@ -6,4 +6,6 @@ import com.obamax.ajo.models.ContributionCycle;
 public interface ContributionCycleService {
 
     ContributionCycle createCycle(ContributionCycleDTO contributionCycleRequest);
+
+    ContributionCycle editCycle(ContributionCycleDTO contributionCycleRequest, Long cycleId);
 }
