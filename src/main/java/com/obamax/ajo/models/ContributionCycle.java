@@ -1,12 +1,12 @@
 package com.obamax.ajo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
@@ -19,21 +19,25 @@ public class ContributionCycle extends BaseEntity {
     private String name;
 
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     @Column(name = "end_date")
-    private Date endDate;
+    private LocalDate endDate;
 
     @Column(name = "payment_start_date")
-    private Date paymentStartDate;
+    private LocalDate paymentStartDate;
 
     @Column(name = "payment_end_date")
-    private Date paymentEndDate;
+    private LocalDate paymentEndDate;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "contributionCycle", fetch = FetchType.LAZY)
     private List<Contribution> contributions;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "contributionCycle", fetch = FetchType.LAZY)
     private List<Request> requests;
 
+    @Column(name = "monthly_amount")
+    private Double monthlyAmount;
 }
