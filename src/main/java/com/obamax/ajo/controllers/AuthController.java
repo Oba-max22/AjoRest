@@ -1,13 +1,7 @@
 package com.obamax.ajo.controllers;
 
-import com.obamax.ajo.exceptions.ResourceNotFoundException;
-import com.obamax.ajo.models.Member;
-import com.obamax.ajo.models.Role;
-import com.obamax.ajo.models.RoleType;
 import com.obamax.ajo.payload.request.LoginRequest;
-import com.obamax.ajo.payload.request.RegisterMemberRequest;
 import com.obamax.ajo.payload.response.LoginResponse;
-import com.obamax.ajo.payload.response.MemberResponse;
 import com.obamax.ajo.repositories.RoleRepository;
 import com.obamax.ajo.security.jwt.JwtUtils;
 import com.obamax.ajo.security.service.UserDetailsServiceImpl;
@@ -16,7 +10,6 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,8 +33,7 @@ public class AuthController {
     private final JwtUtils jwtUtils;
 
     public AuthController(AuthenticationManager authenticationManager, UserDetailsServiceImpl userDetailService,
-                          JwtUtils jwtUtils, MemberService memberService,
-                          RoleRepository roleRepository) {
+                          JwtUtils jwtUtils) {
         this.authenticationManager = authenticationManager;
         this.userDetailService = userDetailService;
         this.jwtUtils = jwtUtils;
