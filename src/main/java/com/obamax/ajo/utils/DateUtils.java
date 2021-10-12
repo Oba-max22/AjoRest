@@ -9,7 +9,7 @@ public class DateUtils {
         Date date = new Date();
 
         //time format
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy hh:mm:ss");
 
         return dateFormat.format(date);
     }
