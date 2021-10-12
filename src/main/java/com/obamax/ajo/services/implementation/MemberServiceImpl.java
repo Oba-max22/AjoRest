@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
-public class MemberServiceImplementation implements MemberService {
+public class MemberServiceImpl implements MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
