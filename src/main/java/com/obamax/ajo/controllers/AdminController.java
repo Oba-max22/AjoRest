@@ -57,7 +57,8 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/admin/edit-member-details/{memberId}")
     @ApiOperation(value = "Allows admin to edit member details")
-    public ResponseEntity<MemberResponse> adminEditMemberDetails (@Valid @RequestBody MemberEditRequest memberRequest, @PathVariable Long memberId) {
+    public ResponseEntity<MemberResponse> adminEditMemberDetails (@Valid @RequestBody MemberEditRequest memberRequest,
+                                                                  @PathVariable Long memberId) {
         Member member = memberService.editMember(memberId, memberRequest);
         return new ResponseEntity<>(MemberResponse.build(member), HttpStatus.OK);
     }
@@ -80,10 +81,16 @@ public class AdminController {
         return new ResponseEntity<>(contributionCycleResponse, HttpStatus.OK);
     }
 
-
-    // TODO - Endpoint for Admin to edit details of contribution cycle.
-
-
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/admin/edit-cycle/{cycleId}")
+    @ApiOperation(value = "Edit contribution cycle constraints")
+    public ResponseEntity<ContributionCycleDTO> editContributionCycle(@Valid @RequestBody
+                                                                      ContributionCycleDTO contributionCycleRequest,
+                                                                      @PathVariable Long cycleId) {
+        ContributionCycle contributionCycle = contributionCycleService.editCycle(contributionCycleRequest, cycleId);
+        ContributionCycleDTO contributionCycleResponse = modelMapper.map(contributionCycle, ContributionCycleDTO.class);
+        return new ResponseEntity<>(contributionCycleResponse, HttpStatus.OK);
+    }
 
     // TODO - Endpoint for Admin to view list of requests in contribution cycle.
 
