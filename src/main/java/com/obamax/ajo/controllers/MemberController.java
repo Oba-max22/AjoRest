@@ -10,6 +10,7 @@ import com.obamax.ajo.services.MemberService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,6 +27,7 @@ public class MemberController {
         this.jwtUtils = jwtUtils;
     }
 
+    @Secured({"ADMIN","MEMBER"})
     @PutMapping("/member/edit-member-details")
     @ApiOperation(value = "Member can edit their details")
     public ResponseEntity<MemberResponse> editMemberDetails(@Valid @RequestBody MemberEditRequest memberRequest,
@@ -40,6 +42,7 @@ public class MemberController {
         return new ResponseEntity<>(memberResponse, HttpStatus.OK);
     }
 
+    @Secured({"ADMIN","MEMBER"})
     @PostMapping("/member/request/{cycleId}")
     @ApiOperation(value = "Member can request to join a contribution cycle")
     public ResponseEntity<Request> cycleRequest (@Valid @RequestBody RequestDTO requestDTO,
