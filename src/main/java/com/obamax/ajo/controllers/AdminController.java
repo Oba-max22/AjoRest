@@ -59,8 +59,9 @@ public class AdminController {
     @ApiOperation(value = "Allows admin to edit member details")
     public ResponseEntity<MemberResponse> adminEditMemberDetails (@Valid @RequestBody MemberEditRequest memberRequest,
                                                                   @PathVariable Long memberId) {
-        Member member = memberService.editMember(memberId, memberRequest);
-        return new ResponseEntity<>(MemberResponse.build(member), HttpStatus.OK);
+        Member member = memberService.findMemberById(memberId);
+        Member editedMember = memberService.editMember(member, memberRequest);
+        return new ResponseEntity<>(MemberResponse.build(editedMember), HttpStatus.OK);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -93,7 +94,6 @@ public class AdminController {
     }
 
     // TODO - Endpoint for Admin to view list of requests in contribution cycle.
-
 
 
     // TODO - Endpoint for Admin to approve member request to join contribution cycle.
