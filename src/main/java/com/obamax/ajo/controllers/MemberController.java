@@ -7,6 +7,7 @@ import com.obamax.ajo.payload.request.MemberEditRequest;
 import com.obamax.ajo.payload.response.MemberResponse;
 import com.obamax.ajo.security.jwt.JwtUtils;
 import com.obamax.ajo.services.MemberService;
+import com.obamax.ajo.services.RequestService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,10 +21,12 @@ import javax.validation.Valid;
 public class MemberController {
 
     private final MemberService memberService;
+    private final RequestService requestService;
     private final JwtUtils jwtUtils;
 
-    public MemberController(MemberService memberService, JwtUtils jwtUtils) {
+    public MemberController(MemberService memberService, RequestService requestService, JwtUtils jwtUtils) {
         this.memberService = memberService;
+        this.requestService = requestService;
         this.jwtUtils = jwtUtils;
     }
 
@@ -50,7 +53,7 @@ public class MemberController {
                                                      HttpServletRequest httpServletRequest) {
         String jwt = jwtUtils.parseJwt(httpServletRequest);
         String email = jwtUtils.extractUserName(jwt);
-        Request newRequest = memberService.makeRequest(requestDTO, cycleId, email);
+        Request newRequest = requestService.makeRequest(requestDTO, cycleId, email);
         return new ResponseEntity<>(newRequest, HttpStatus.OK);
     }
 
