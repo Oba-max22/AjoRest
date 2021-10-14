@@ -12,6 +12,7 @@ import com.obamax.ajo.payload.response.MemberResponse;
 import com.obamax.ajo.repositories.RoleRepository;
 import com.obamax.ajo.services.ContributionCycleService;
 import com.obamax.ajo.services.MemberService;
+import com.obamax.ajo.services.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
@@ -27,14 +28,16 @@ import java.util.List;
 public class AdminController {
 
     private final ContributionCycleService contributionCycleService;
+    private final UserService userService;
     private final MemberService memberService;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
 
     public AdminController(ContributionCycleService contributionCycleService,
-                           MemberService memberService,
+                           UserService userService, MemberService memberService,
                            RoleRepository roleRepository, ModelMapper modelMapper) {
         this.contributionCycleService = contributionCycleService;
+        this.userService = userService;
         this.memberService = memberService;
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
@@ -44,7 +47,7 @@ public class AdminController {
     @PostMapping("/admin/create-member")
     @ApiOperation(value = "Create a new member")
     public MemberResponse register(@Valid @RequestBody RegisterMemberRequest registerMember) {
-        Member member = memberService.registration(registerMember);
+        Member member = userService.registration(registerMember);
         List<Role> roles = new ArrayList<>();
         Role memberRole = roleRepository.findRoleByType(RoleType.MEMBER)
                 .orElseThrow(() -> new ResourceNotFoundException("Error: Role is not found."));
@@ -57,8 +60,8 @@ public class AdminController {
     @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/admin/edit-member-details/{memberId}")
     @ApiOperation(value = "Allows admin to edit member details")
-    public ResponseEntity<MemberResponse> adminEditMemberDetails (@Valid @RequestBody MemberEditRequest memberRequest,
-                                                                  @PathVariable Long memberId) {
+    public ResponseEntity<MemberResponse> adminEditMemberDetails(@Valid @RequestBody MemberEditRequest memberRequest,
+                                                                 @PathVariable Long memberId) {
         Member member = memberService.findMemberById(memberId);
         Member editedMember = memberService.editMember(member, memberRequest);
         return new ResponseEntity<>(MemberResponse.build(editedMember), HttpStatus.OK);
@@ -99,25 +102,19 @@ public class AdminController {
     // TODO - Endpoint for Admin to approve member request to join contribution cycle.
 
 
-
     // TODO - Endpoint for Admin to decline member request to join contribution cycle.
-
 
 
     // TODO - Endpoint for Admin to view list of members in contribution cycle.
 
 
-
     // TODO - Endpoint for Admin to view collection order in a contribution cycle.
-
 
 
     // TODO - Endpoint for Admin to start cycle.
 
 
-
     // TODO - Endpoint for Admin to pay to beneficiary in a contribution cycle.
-
 
 
 }
