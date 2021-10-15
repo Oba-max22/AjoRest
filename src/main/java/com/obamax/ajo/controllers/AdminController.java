@@ -2,16 +2,14 @@ package com.obamax.ajo.controllers;
 
 import com.obamax.ajo.dto.ContributionCycleDTO;
 import com.obamax.ajo.exceptions.ResourceNotFoundException;
-import com.obamax.ajo.models.ContributionCycle;
-import com.obamax.ajo.models.Member;
-import com.obamax.ajo.models.Role;
-import com.obamax.ajo.models.RoleType;
+import com.obamax.ajo.models.*;
 import com.obamax.ajo.payload.request.MemberEditRequest;
 import com.obamax.ajo.payload.request.RegisterMemberRequest;
 import com.obamax.ajo.payload.response.MemberResponse;
 import com.obamax.ajo.repositories.RoleRepository;
 import com.obamax.ajo.services.ContributionCycleService;
 import com.obamax.ajo.services.MemberService;
+import com.obamax.ajo.services.RequestService;
 import com.obamax.ajo.services.UserService;
 import io.swagger.annotations.ApiOperation;
 import org.modelmapper.ModelMapper;
@@ -30,15 +28,17 @@ public class AdminController {
     private final ContributionCycleService contributionCycleService;
     private final UserService userService;
     private final MemberService memberService;
+    private final RequestService requestService;
     private final RoleRepository roleRepository;
     private final ModelMapper modelMapper;
 
     public AdminController(ContributionCycleService contributionCycleService,
                            UserService userService, MemberService memberService,
-                           RoleRepository roleRepository, ModelMapper modelMapper) {
+                           RequestService requestService, RoleRepository roleRepository, ModelMapper modelMapper) {
         this.contributionCycleService = contributionCycleService;
         this.userService = userService;
         this.memberService = memberService;
+        this.requestService = requestService;
         this.roleRepository = roleRepository;
         this.modelMapper = modelMapper;
     }
@@ -96,8 +96,13 @@ public class AdminController {
         return new ResponseEntity<>(contributionCycleResponse, HttpStatus.OK);
     }
 
-    // TODO - Endpoint for Admin to view list of requests in contribution cycle.
-
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/admin/view-requests/{cycleId}")
+    @ApiOperation(value = "view cycle requests")
+    public ResponseEntity<List<Request>> viewAllCycleRequests(@PathVariable Long cycleId) {
+        List<Request> requestList = requestService.getAllCycleRequests(cycleId);
+        return new ResponseEntity<>(requestList, HttpStatus.OK);
+    }
 
     // TODO - Endpoint for Admin to approve member request to join contribution cycle.
 
