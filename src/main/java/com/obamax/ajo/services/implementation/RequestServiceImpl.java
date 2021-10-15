@@ -2,6 +2,7 @@ package com.obamax.ajo.services.implementation;
 
 import com.obamax.ajo.dto.RequestDTO;
 import com.obamax.ajo.exceptions.BadRequestException;
+import com.obamax.ajo.exceptions.ResourceNotFoundException;
 import com.obamax.ajo.models.ContributionCycle;
 import com.obamax.ajo.models.Member;
 import com.obamax.ajo.models.Request;
@@ -14,6 +15,7 @@ import com.obamax.ajo.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,6 +47,16 @@ public class RequestServiceImpl implements RequestService {
             return request;
         } else {
             throw new BadRequestException("ContributionCycle Id not valid and Member not found.");
+        }
+    }
+
+    @Override
+    public List<Request> getAllCycleRequests(Long cycleId) {
+        Optional<ContributionCycle> contributionCycle =  contributionCycleRepository.findById(cycleId);
+        if(contributionCycle.isPresent()) {
+            return requestRepository.findAllByContributionCycle(contributionCycle.get());
+        } else {
+            throw new ResourceNotFoundException("ContributionCycle Id not valid.");
         }
     }
 }
