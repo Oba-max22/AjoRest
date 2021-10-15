@@ -1,5 +1,6 @@
 package com.obamax.ajo.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import javax.persistence.*;
@@ -20,6 +21,7 @@ public class BaseUser extends BaseEntity {
     @Column(name = "first_name", nullable = false)
     public String firstName;
 
+    @JsonIgnore
     @Size(min = 6, message = "password length must be more than 5")
     @Column(name = "password", nullable = false)
     public String password;
