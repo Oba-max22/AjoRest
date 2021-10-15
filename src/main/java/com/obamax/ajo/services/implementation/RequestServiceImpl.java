@@ -59,4 +59,14 @@ public class RequestServiceImpl implements RequestService {
             throw new ResourceNotFoundException("ContributionCycle Id not valid.");
         }
     }
+
+    @Override
+    public List<Request> getAllMemberRequests(String email) {
+        Optional<Member> member = memberRepository.findByEmailAddress(email);
+        if(member.isPresent()) {
+            return requestRepository.findAllByMember(member.get());
+        } else {
+            throw new BadRequestException("Member not found! Login with a Member account and try again.");
+        }
+    }
 }
