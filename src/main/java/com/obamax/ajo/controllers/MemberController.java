@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 public class MemberController {
@@ -57,7 +58,15 @@ public class MemberController {
         return new ResponseEntity<>(newRequest, HttpStatus.OK);
     }
 
-    // TODO - Endpoint for member to view request status. Or get request by Id.
+    @Secured({"ADMIN","MEMBER"})
+    @GetMapping("/member/request/")
+    @ApiOperation(value = "Member can view all requests he/she has made")
+    public ResponseEntity<List<Request>> viewRequestsByMember(HttpServletRequest httpServletRequest) {
+        String jwt = jwtUtils.parseJwt(httpServletRequest);
+        String email = jwtUtils.extractUserName(jwt);
+        List<Request> memberRequests = requestService.getAllMemberRequests(email);
+        return new ResponseEntity<>(memberRequests, HttpStatus.OK);
+    }
 
 
     // TODO - Endpoint for member to view details of contribution cycle.
