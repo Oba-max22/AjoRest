@@ -7,4 +7,5 @@ import java.util.List;
 public interface RequestService {
     Request makeRequest(RequestDTO request, Long cycleId, String email);
     List<Request> getAllCycleRequests(Long cycleId);
+    List<Request> getAllMemberRequests(String email);
 }
