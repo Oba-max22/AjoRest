@@ -3,11 +3,9 @@ package com.obamax.ajo.services.implementation;
 import com.obamax.ajo.dto.RequestDTO;
 import com.obamax.ajo.exceptions.BadRequestException;
 import com.obamax.ajo.exceptions.ResourceNotFoundException;
-import com.obamax.ajo.models.ContributionCycle;
-import com.obamax.ajo.models.Member;
-import com.obamax.ajo.models.Request;
-import com.obamax.ajo.models.RequestStatusType;
+import com.obamax.ajo.models.*;
 import com.obamax.ajo.repositories.ContributionCycleRepository;
+import com.obamax.ajo.repositories.MemberContributionCycleRepository;
 import com.obamax.ajo.repositories.MemberRepository;
 import com.obamax.ajo.repositories.RequestRepository;
 import com.obamax.ajo.services.RequestService;
@@ -30,6 +28,9 @@ public class RequestServiceImpl implements RequestService {
     @Autowired
     private RequestRepository requestRepository;
 
+    @Autowired
+    private MemberContributionCycleRepository memberContributionCycleRepository;
+
     @Override
     public Request makeRequest(RequestDTO requestDTO, Long cycleId, String email) {
         Optional<Member> member = memberRepository.findByEmailAddress(email);
@@ -37,6 +38,12 @@ public class RequestServiceImpl implements RequestService {
 
         Request request = new Request();
         if (member.isPresent() && contributionCycle.isPresent()) {
+
+            if(requestRepository.existsByMember(member.get())) {
+                throw new BadRequestException("You have already made a request to " +
+                        "join this ContributionCycle.");
+            }
+
             request.setMember(member.get());
             request.setDateOfRequest(DateUtils.getCurrentTime());
             request.setContributionCycle(contributionCycle.get());
@@ -66,7 +73,39 @@ public class RequestServiceImpl implements RequestService {
         if(member.isPresent()) {
             return requestRepository.findAllByMember(member.get());
         } else {
-            throw new BadRequestException("Member not found! Login with a Member account and try again.");
+            throw new ResourceNotFoundException("Member not found! Login with a Member account and try again.");
         }
+    }
+
+    @Override
+    public void approveRequest(Long requestId) {
+        Optional<Request> request = requestRepository.findById(requestId);
+        if(request.isPresent()) {
+            addMemberToContributionCycle(request.get().getMember(), request.get().getContributionCycle());
+            request.get().setStatusOfRequest(RequestStatusType.APPROVED);
+            requestRepository.save(request.get());
+        } else {
+            throw new BadRequestException("Request Id not valid.");
+        }
+    }
+
+    private void addMemberToContributionCycle(Member member, ContributionCycle contributionCycle) {
+        MemberContributionCycle memberContributionCycle = new MemberContributionCycle();
+
+        memberContributionCycle.setMember(member);
+        memberContributionCycle.setContributionCycle(contributionCycle);
+
+        if(memberContributionCycle.getSlot() < 12) {
+            memberContributionCycle.setSlot(memberContributionCycle.getSlot() + 1);
+        } else {
+            throw new BadRequestException("Slots full!");
+        }
+
+        memberContributionCycle.setAmountPaid(0.00);
+        memberContributionCycle.setDateJoined(DateUtils.getCurrentTime());
+        memberContributionCycle.setDateJoined("N/A");
+        memberContributionCycle.setStatus(StatusType.NOT_PAID);
+
+        memberContributionCycleRepository.save(memberContributionCycle);
     }
 }
