@@ -19,7 +19,7 @@ public class MemberContributionCycle extends BaseEntity {
     @JoinColumn(name = "contribution_cycle_id")
     private ContributionCycle contributionCycle;
 
-    private int slot;
+    private int slot = 0;
 
     @Column(name = "amount_paid")
     private Double amountPaid;
