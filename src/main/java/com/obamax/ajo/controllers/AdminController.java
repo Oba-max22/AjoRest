@@ -5,6 +5,7 @@ import com.obamax.ajo.exceptions.ResourceNotFoundException;
 import com.obamax.ajo.models.*;
 import com.obamax.ajo.payload.request.MemberEditRequest;
 import com.obamax.ajo.payload.request.RegisterMemberRequest;
+import com.obamax.ajo.payload.response.ApiResponse;
 import com.obamax.ajo.payload.response.MemberResponse;
 import com.obamax.ajo.repositories.RoleRepository;
 import com.obamax.ajo.services.ContributionCycleService;
@@ -104,8 +105,15 @@ public class AdminController {
         return new ResponseEntity<>(requestList, HttpStatus.OK);
     }
 
-    // TODO - Endpoint for Admin to approve member request to join contribution cycle.
-
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/admin/approve-request/{requestId}")
+    @ApiOperation(value = "Admin can approve member request to join contribution cycle")
+    public ResponseEntity<ApiResponse> adminApproveRequest(@PathVariable Long requestId) {
+        requestService.approveRequest(requestId);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("Request has been approved!");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 
     // TODO - Endpoint for Admin to decline member request to join contribution cycle.
 
