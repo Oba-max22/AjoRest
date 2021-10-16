@@ -11,4 +11,5 @@ import java.util.List;
 public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findAllByContributionCycle(ContributionCycle contributionCycle);
     List<Request> findAllByMember(Member member);
+    boolean existsByMember(Member member);
 }
