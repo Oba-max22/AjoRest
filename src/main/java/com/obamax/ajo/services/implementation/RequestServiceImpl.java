@@ -78,6 +78,17 @@ public class RequestServiceImpl implements RequestService {
     }
 
     @Override
+    public void declineRequest(Long requestId) {
+        Optional<Request> request = requestRepository.findById(requestId);
+        if(request.isPresent()) {
+            request.get().setStatusOfRequest(RequestStatusType.DECLINED);
+            requestRepository.save(request.get());
+        } else {
+            throw new BadRequestException("Request Id not valid.");
+        }
+    }
+
+    @Override
     public void approveRequest(Long requestId) {
         Optional<Request> request = requestRepository.findById(requestId);
         if(request.isPresent()) {
