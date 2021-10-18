@@ -115,8 +115,15 @@ public class AdminController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    // TODO - Endpoint for Admin to decline member request to join contribution cycle.
-
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping("/admin/decline-request/{requestId}")
+    @ApiOperation(value = "Admin can decline member request to join contribution cycle")
+    public ResponseEntity<ApiResponse> adminDeclineRequest(@PathVariable Long requestId) {
+        requestService.declineRequest(requestId);
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("Request has been declined!");
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
 
     // TODO - Endpoint for Admin to view list of members in contribution cycle.
 
