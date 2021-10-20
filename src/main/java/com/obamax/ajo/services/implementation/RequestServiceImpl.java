@@ -10,6 +10,7 @@ import com.obamax.ajo.repositories.MemberRepository;
 import com.obamax.ajo.repositories.RequestRepository;
 import com.obamax.ajo.services.RequestService;
 import com.obamax.ajo.utils.DateUtils;
+import com.obamax.ajo.utils.SlotUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -106,8 +107,8 @@ public class RequestServiceImpl implements RequestService {
         memberContributionCycle.setMember(member);
         memberContributionCycle.setContributionCycle(contributionCycle);
 
-        if(memberContributionCycle.getSlot() < 12) {
-            memberContributionCycle.setSlot(memberContributionCycle.getSlot() + 1);
+        if(SlotUtils.slotValue < 12) {
+            memberContributionCycle.setSlot(SlotUtils.incrementSlotValue());
         } else {
             throw new BadRequestException("Slots full!");
         }
